@@ -6,7 +6,7 @@ import {
   ScrollView,
   Image,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import { SearchBar, PricingCard, colors } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
@@ -181,7 +181,7 @@ export default function App() {
     );
   };
 
-  const Products = () => {
+  const Products = ({ navigation }) => {
     const [search, setSearch] = useState('');
 
     const updateSearch = (search) => {
@@ -221,31 +221,32 @@ export default function App() {
                     }}
                   />
                   <View>
-                  <Text style={styles.prdtext1}>NYX Foundation</Text>
+                    <Text style={styles.prdtext1}>NYX Foundation</Text>
                   </View>
                   <View style={styles.row}>
-                  <Text style={styles.prdtext2}>Rs.900</Text>
-                  
-                  
-                  <TouchableOpacity
-              style={{
-                backgroundColor: '#EC255A',
-                width: 30,
-                height: 30,
-                borderRadius: 50,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop:7
-              }}
-              onPress={() => {
-                
-              }}
-            >
-              <Text style={{color: 'white', fontSize:  18,fontWeight:"bold"}}>+</Text>
-            </TouchableOpacity>
-                  
+                    <Text style={styles.prdtext2}>Rs.900</Text>
+
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: '#EC255A',
+                        width: 30,
+                        height: 30,
+                        borderRadius: 50,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: 7,
+                      }}
+                      onPress={() => navigation.navigate('Item')}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}>
+                        +
+                      </Text>
+                    </TouchableOpacity>
                   </View>
-                  
                 </View>
 
                 <View style={styles.carts}></View>
@@ -253,6 +254,149 @@ export default function App() {
             </View>
           </ScrollView>
         </View>
+      </View>
+    );
+  };
+  const ShowProduct = ({ navigation }) => {
+    const[getNumber,setNumber] = useState(1)
+    
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#fffafd',
+        }}>
+        <TouchableOpacity
+              style={{
+                backgroundColor: '#EC255A',
+                width: 90,
+                height: 30,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 7,
+                marginRight:210
+              }}
+              onPress={() => navigation.navigate('Products')}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 13,
+                  fontWeight: 'bold',
+                }}>
+                BACK
+              </Text>
+            </TouchableOpacity>
+        <ScrollView>
+          <View>
+            <Image
+              style={{ height: 290, width: 290, margin: 13 }}
+              source={{
+                uri: 'https://www.nyxcosmetics.com/on/demandware.static/-/Sites-cpd-nyxusa-master-catalog/default/dw4ba747ae/ProductImages/2018/Face/Total_Control_Drop_Foundation/800897147617_totalcontroldropfoudnation_sienna_alt1.jpg',
+              }}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              marginBottom: 10,
+            }}>
+            <View>
+              <Text style={styles.prdtext1}>NYX Foundation</Text>
+            </View>
+
+            <Text style={styles.prdtext2}>Rs.900</Text>
+          </View>
+          <View>
+            <Text style={styles.prdtext1}>Product Details</Text>
+            <View style={{ padding: 5, margin: 8, alignContent: 'center' }}>
+              <Text
+                style={{ backgroundColor: '#FEE3EC', padding: 8, margin: 5 }}>
+                Shockingly lightweight, waterproof and pigmented AF, Can’t Stop
+                Won’t Stop Full Coverage Foundation is our full coverage classic
+                foundation that hustles as hard as you do. This comfy,
+                long-wearing waterproof liquid comes in a wide range of
+                flattering tones that don’t transfer. Every creamy liquid shade
+                glides on smooth, delivering matte coverage that stays true up
+                to 24 hours. This over achiever also works to control shine and
+                mattify your complexion all-day long
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              justifyContent: 'space-evenly',
+              flexDirection: 'row',
+              margin: 3,
+              marginBottom: 10,
+            }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#EC255A',
+                width: 30,
+                height: 30,
+                borderRadius: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 7,
+              }}
+              onPress={() => setNumber(getNumber-1)}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                }}>
+                -
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.prdtext2}>{getNumber}</Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#EC255A',
+                width: 30,
+                height: 30,
+                borderRadius: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 7,
+              }}
+              onPress={() => setNumber(getNumber+1)}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                }}>
+                +
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#EC255A',
+                width: 120,
+                height: 30,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 7,
+              }}
+              onPress={() => {}}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 13,
+                  fontWeight: 'bold',
+                }}>
+                ADD TO CART
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   };
@@ -296,6 +440,21 @@ export default function App() {
           name="Watch & Learn"
           component={WatchLearn}
         />
+        <Drawer.Screen
+          options={{
+            drawerLabel: () => null,
+            headerStyle: {
+              backgroundColor: '#781D42',
+            },
+
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+          name="Item"
+          component={ShowProduct}
+        />
       </Drawer.Navigator>
     );
   };
@@ -330,7 +489,7 @@ const styles = StyleSheet.create({
     width: 147,
     height: 190,
     margin: 7,
-    padding:5
+    padding: 5,
   },
   view: {
     margin: 10,
@@ -348,20 +507,20 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     height: 100,
     width: 100,
-    marginRight:"auto" ,
-    marginLeft:"auto"  ,
-    marginTop:8
+    marginRight: 'auto',
+    marginLeft: 'auto',
+    marginTop: 8,
   },
   prdtext1: {
     fontWeight: 'bold',
     fontSize: 15,
-    marginTop:9,
-    marginLeft:9
+    marginTop: 9,
+    marginLeft: 9,
   },
   prdtext2: {
     fontWeight: 'bold',
     fontSize: 15,
-    marginTop:9,
-    marginLeft:9
+    marginTop: 9,
+    marginLeft: 9,
   },
 });
