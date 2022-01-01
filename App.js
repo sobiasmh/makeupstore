@@ -7,8 +7,10 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
+  FlatList,
+  ActivityIndicator
 } from 'react-native';
-import { SearchBar, PricingCard, colors } from 'react-native-elements';
+import { SearchBar, colors, Input } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -22,8 +24,7 @@ export default function App() {
         initialRouteName="Categories"
         activeColor="white"
         shifting={true}
-        labelStyle={{ fontSize: 12 }}
-        style={{ backgroundColor: 'tomato' }}>
+        labelStyle={{ fontSize: 12 }}>
         <Tab.Screen
           name="Categories"
           component={Categories}
@@ -54,12 +55,53 @@ export default function App() {
 
   const WatchLearn = ({ navigation }) => {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Watch and Learn</Text>
-      </View>
+      <Tab.Navigator
+        initialRouteName="Categories"
+        activeColor="white"
+        shifting={true}
+        labelStyle={{ fontSize: 12 }}>
+        <Tab.Screen
+          name="Videos"
+          component={Videos}
+          options={{
+            tabBarLabel: 'Videos',
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="video" color={color} size={26} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Community"
+          component={Community}
+          options={{
+            tabBarLabel: 'Community',
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons
+                name="message-processing-outline"
+                color={color}
+                size={26}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Reviews"
+          component={Reviews}
+          options={{
+            tabBarLabel: 'Reviews',
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons
+                name="heart-circle"
+                color={color}
+                size={26}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
     );
   };
-  const Categories = () => {
+  const Categories = ({navigation}) => {
     return (
       <View
         style={{
@@ -69,7 +111,8 @@ export default function App() {
           backgroundColor: 'white',
         }}>
         <ScrollView>
-          <View
+
+          <TouchableOpacity
             style={{
               backgroundColor: '#8267BE',
               width: 299,
@@ -79,7 +122,9 @@ export default function App() {
               marginTop: 20,
               flexDirection: 'row',
               justifyContent: 'space-evenly',
-            }}>
+            }}
+            onPress={() => navigation.navigate('Products')}
+            >
             <View>
               <Text style={styles.text}>Face</Text>
             </View>
@@ -93,12 +138,12 @@ export default function App() {
                   marginTop: 9,
                 }}
                 source={{
-                  uri: 'https://cdn-icons.flaticon.com/png/512/1807/premium/1807363.png?token=exp=1640599877~hmac=d6de1f3bba1eeba66c361ef52a3db38f',
+                  uri: 'https://cdn-icons.flaticon.com/png/512/1807/premium/1807363.png?token=exp=1640937351~hmac=269efc31d168740eb0c8955603e31eac',
                 }}
               />
             </View>
-          </View>
-          <View
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
               backgroundColor: '#A3E4DB',
               width: 299,
@@ -107,7 +152,9 @@ export default function App() {
               marginBottom: 20,
               flexDirection: 'row',
               justifyContent: 'space-evenly',
-            }}>
+            }}
+            onPress={() => navigation.navigate('Products')}
+            >
             <View>
               <Text style={styles.text}>Lips</Text>
             </View>
@@ -120,11 +167,11 @@ export default function App() {
                 marginTop: 9,
               }}
               source={{
-                uri: 'https://cdn-icons.flaticon.com/png/512/2975/premium/2975771.png?token=exp=1640599877~hmac=40795a28dd48c9399d5e311fe7b87401',
+                uri: 'https://cdn-icons.flaticon.com/png/512/2975/premium/2975771.png?token=exp=1640937351~hmac=3a453a4a3948c2c26b3df157da058824',
               }}
             />
-          </View>
-          <View
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
               backgroundColor: '#F999B7',
               width: 299,
@@ -133,7 +180,9 @@ export default function App() {
               marginBottom: 20,
               flexDirection: 'row',
               justifyContent: 'space-evenly',
-            }}>
+            }}
+            onPress={() => navigation.navigate('Products')}
+            >
             <View>
               <Text style={styles.text}>Eyes</Text>
             </View>
@@ -149,8 +198,8 @@ export default function App() {
                 uri: 'https://cdn-icons-png.flaticon.com/512/3163/3163195.png',
               }}
             />
-          </View>
-          <View
+          </TouchableOpacity>
+          <TouchableOpacity
             style={{
               backgroundColor: '#2C272E',
               width: 299,
@@ -159,7 +208,9 @@ export default function App() {
               marginBottom: 20,
               flexDirection: 'row',
               justifyContent: 'space-evenly',
-            }}>
+            }}
+            onPress={() => navigation.navigate('Products')}
+            >
             <View>
               <Text style={styles.text}>Skin</Text>
             </View>
@@ -172,29 +223,75 @@ export default function App() {
                 marginTop: 9,
               }}
               source={{
-                uri: 'https://cdn-icons.flaticon.com/png/512/1807/premium/1807383.png?token=exp=1640599877~hmac=f2d7112ac6e9370ded55ece033a7b255',
+                uri: 'https://cdn-icons.flaticon.com/png/512/1807/premium/1807383.png?token=exp=1640937351~hmac=a23cdb3a09056b459bf8ac9075b4bce5',
               }}
             />
-          </View>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     );
   };
 
-  const Products = ({ navigation }) => {
+  const Products = ({ navigation  }) => {
     const [search, setSearch] = useState('');
+    const [array, setarray] = useState([]);
+    const [getcondition, setcondition] = React.useState(true);
+    const getproduct = () => {
+      fetch(
+        `https://barebeauty-bc3ab-default-rtdb.firebaseio.com/Products.json`,
+        {
+          method: 'GET',
+        }
+      )
+        .then((response) => response.json())
+        .then((responsejson) => {
+          let samplearray = [];
+          for (key in responsejson) {
+            if (array.length == 0) {
+              console.log('First add');
+              samplearray.push(responsejson[key]);
+            } else {
+              console.log('other addition');
+              samplearray.push(responsejson[key]);
+            }
+          }
+          setarray(samplearray);
 
+          console.log(array);
+
+          setcondition(false);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    };
+
+    React.useEffect(() => {
+      getproduct();
+    }, []);
     const updateSearch = (search) => {
       setSearch(search);
     };
+     if (getcondition) {
+    return (
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
 
+        <Text>Waiting for response</Text>
+      </View>
+    );
+  }
     return (
       <View
         style={{
           flex: 1,
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'flex-start',
+          width:"100%",
+          padding:4,
+          margin:4,
           backgroundColor: '#fffafd',
+
         }}>
         <Text></Text>
         <View style={{ flex: 1 }}>
@@ -206,59 +303,72 @@ export default function App() {
               value={search}
             />
           </View>
-          <ScrollView>
-            <View>
-              <View style={{ padding: 8, margin: 8 }}>
-                <Text style={styles.text2}>All Makeup Products</Text>
-              </View>
 
-              <View style={styles.row}>
-                <View style={styles.carts}>
-                  <Image
-                    style={styles.productImg}
-                    source={{
-                      uri: 'https://www.nyxcosmetics.com/on/demandware.static/-/Sites-cpd-nyxusa-master-catalog/default/dw4ba747ae/ProductImages/2018/Face/Total_Control_Drop_Foundation/800897147617_totalcontroldropfoudnation_sienna_alt1.jpg',
-                    }}
-                  />
-                  <View>
-                    <Text style={styles.prdtext1}>NYX Foundation</Text>
-                  </View>
-                  <View style={styles.row}>
-                    <Text style={styles.prdtext2}>Rs.900</Text>
-
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: '#EC255A',
-                        width: 30,
-                        height: 30,
-                        borderRadius: 50,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: 7,
-                      }}
-                      onPress={() => navigation.navigate('Item')}>
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontSize: 18,
-                          fontWeight: 'bold',
-                        }}>
-                        +
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+          <View>
+            <View style={{ padding: 8, margin: 8 }}>
+              <Text style={styles.text2}>All Makeup Products</Text>
+            </View>
+            
+<FlatList
+          data={array}
+          numColumns={2}
+          renderItem={({ item }) => {
+            return (
+              
+            <View style={styles.row}>
+            
+              <View style={styles.carts}>
+                <Image
+                  style={styles.productImg}
+                  source={{
+                    uri: item.uri,
+                  }}
+                />
+                <View>
+                  <Text style={styles.prdtext1}>{item.Name}</Text>
                 </View>
+                <View style={styles.row}>
+                  <Text style={styles.prdtext2}>Rs {item.Price}</Text>
 
-                <View style={styles.carts}></View>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#EC255A',
+                      width: 30,
+                      height: 30,
+                      borderRadius: 50,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop: 7,
+                    }}
+                    onPress={() => navigation.navigate('Item', {
+                      product: item
+                    })
+                    }>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                      }}>
+                      +
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </ScrollView>
+    )
+          }}
+           keyExtractor={(item, index) => index.toString()}
+    />
+          </View>
         </View>
       </View>
     );
   };
-  const ShowProduct = ({ navigation }) => {
-    const[getNumber,setNumber] = useState(1)
+  const ShowProduct = ({ navigation, route }) => {
+    const [getNumber, setNumber] = useState(1);
+    const {product} = route.params;
+    const [getCart, setCart] = useState([{'Name':null,"Price":null,"Quantity":null}])
     
     return (
       <View
@@ -269,32 +379,34 @@ export default function App() {
           backgroundColor: '#fffafd',
         }}>
         <TouchableOpacity
-              style={{
-                backgroundColor: '#EC255A',
-                width: 90,
-                height: 30,
-                borderRadius: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: 7,
-                marginRight:210
-              }}
-              onPress={() => navigation.navigate('Products')}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 13,
-                  fontWeight: 'bold',
-                }}>
-                BACK
-              </Text>
-            </TouchableOpacity>
+          style={{
+            backgroundColor: '#EC255A',
+            width: 90,
+            height: 30,
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 7,
+            marginRight: 210,
+          }}
+          onPress={() => {
+            navigation.navigate('Products');
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 13,
+              fontWeight: 'bold',
+            }}>
+            BACK
+          </Text>
+        </TouchableOpacity>
         <ScrollView>
           <View>
             <Image
               style={{ height: 290, width: 290, margin: 13 }}
               source={{
-                uri: 'https://www.nyxcosmetics.com/on/demandware.static/-/Sites-cpd-nyxusa-master-catalog/default/dw4ba747ae/ProductImages/2018/Face/Total_Control_Drop_Foundation/800897147617_totalcontroldropfoudnation_sienna_alt1.jpg',
+                uri: product.uri,
               }}
             />
           </View>
@@ -305,24 +417,17 @@ export default function App() {
               marginBottom: 10,
             }}>
             <View>
-              <Text style={styles.prdtext1}>NYX Foundation</Text>
+              <Text style={styles.prdtext1}>{product.Name}</Text>
             </View>
 
-            <Text style={styles.prdtext2}>Rs.900</Text>
+            <Text style={styles.prdtext2}>Rs.{product.Price}</Text>
           </View>
           <View>
             <Text style={styles.prdtext1}>Product Details</Text>
             <View style={{ padding: 5, margin: 8, alignContent: 'center' }}>
               <Text
                 style={{ backgroundColor: '#FEE3EC', padding: 8, margin: 5 }}>
-                Shockingly lightweight, waterproof and pigmented AF, Can’t Stop
-                Won’t Stop Full Coverage Foundation is our full coverage classic
-                foundation that hustles as hard as you do. This comfy,
-                long-wearing waterproof liquid comes in a wide range of
-                flattering tones that don’t transfer. Every creamy liquid shade
-                glides on smooth, delivering matte coverage that stays true up
-                to 24 hours. This over achiever also works to control shine and
-                mattify your complexion all-day long
+                {product.Description}
               </Text>
             </View>
           </View>
@@ -343,7 +448,7 @@ export default function App() {
                 alignItems: 'center',
                 marginTop: 7,
               }}
-              onPress={() => setNumber(getNumber-1)}>
+              onPress={() => setNumber(getNumber - 1)}>
               <Text
                 style={{
                   color: 'white',
@@ -364,7 +469,7 @@ export default function App() {
                 alignItems: 'center',
                 marginTop: 7,
               }}
-              onPress={() => setNumber(getNumber+1)}>
+              onPress={() => setNumber(getNumber + 1)}>
               <Text
                 style={{
                   color: 'white',
@@ -385,19 +490,212 @@ export default function App() {
                 alignItems: 'center',
                 marginTop: 7,
               }}
-              onPress={() => {}}>
+              onPress={() => {
+                var obj={};
+                obj['Name'] = product.Name;
+                obj['Price'] = product.Price;
+                obj['Quantity'] = getNumber;
+                setCart([...getCart, obj])
+              }}>
               <Text
                 style={{
                   color: 'white',
                   fontSize: 13,
                   fontWeight: 'bold',
                 }}>
-                ADD TO CART
+                ADD PRODUCT
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#EC255A',
+                width: 120,
+                height: 30,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 7,
+              }}
+              onPress={() => navigation.navigate('Order', {
+                prd:getCart
+              }
+                )}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 13,
+                  fontWeight: 'bold',
+                }}>
+                CHECK CART
               </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
+    );
+  };
+  const Videos = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#fffafd',
+        }}></View>
+    );
+  };
+  const Community = () => {
+    const [search, setSearch] = useState('');
+    const [getQues, setQues] = useState('');
+    const [getPost, setPost] = useState([]);
+    const [filtered, setFilterted] = useState('');
+
+    const updateSearch = (search) => {
+      const d = getPost.filter((item) => {
+        return item.toLowerCase().match(search);
+      });
+
+      setSearch(search);
+      setFilterted(d);
+    };
+    const submit = () => {
+      setPost([...getPost, getQues]);
+    };
+
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#fffafd',
+        }}>
+        <Text></Text>
+        <View style={{ flex: 1 }}>
+          <View style={styles.view}>
+            <SearchBar
+              placeholder="Search Questions..."
+              onChangeText={updateSearch}
+              platform="android"
+              style={{ padding: 5 }}
+              value={search}
+            />
+          </View>
+          <View style={{ padding: 8, margin: 8 }}>
+            <Text style={styles.text2}>Ask Questions</Text>
+          </View>
+          <View>
+            <Input
+              placeholder="Type your question here"
+              leftIcon={{ type: 'font-awesome', name: 'comment' }}
+              onChangeText={setQues}
+            />
+          </View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#D77FA1',
+              width: 100,
+              height: 30,
+              borderRadius: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 7,
+              marginLeft: 220,
+            }}
+            onPress={() => {
+              submit();
+            }}>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 13,
+                fontWeight: 'bold',
+              }}>
+              POST
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.quesBox}>
+            <FlatList
+              data={filtered.length > 0 ? filtered : getPost}
+              keyExtractor={({ id }, index) => id}
+              renderItem={({ item }) => (
+                <Text
+                  style={{
+                    backgroundColor: '#BAABDA',
+                    padding: 8,
+                    margin: 5,
+                    fontSize: 17,
+                    borderWidth: 1,
+                    borderColor:"white"
+                  }}>
+                  {item}
+                </Text>
+              )}
+            />
+          </View>
+        </View>
+      </View>
+    );
+  };
+  const Reviews = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#fffafd',
+        }}></View>
+    );
+  };
+
+  const Order = ({navigation, route}) => {
+    const {prd} = route.params;
+    
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#fffafd',
+        }}>
+          <View style={{ flex: 1 }}>
+            <View >
+            <FlatList
+        style={{ paddingTop: 20, width: '100%' }}
+        data={prd}
+        renderItem={({ item }) => (
+          <View
+            
+            style={{
+              backgroundColor: '#064635',
+              margin: 5,
+              padding: 5,
+              borderRadius: 10,
+              width: '95%',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+
+            }}
+            
+            
+          >
+            <Text style={{ fontSize: 15, color: 'white' }}> {item.Name} {"\n"} {item.Price} {"\n"} {item.Quantity}</Text>
+            
+            
+
+            
+          </View>
+        )}
+        />
+            </View>
+            
+          </View>
+
+        </View>
     );
   };
 
@@ -430,7 +728,7 @@ export default function App() {
         <Drawer.Screen
           options={{
             headerStyle: {
-              backgroundColor: '#041C32',
+              backgroundColor: '#BAABDA',
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
@@ -454,6 +752,21 @@ export default function App() {
           }}
           name="Item"
           component={ShowProduct}
+        />
+        <Drawer.Screen
+          options={{
+            drawerLabel: () => null,
+            headerStyle: {
+              backgroundColor: '#781D42',
+            },
+
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+          name="Order"
+          component={Order}
         />
       </Drawer.Navigator>
     );
@@ -492,16 +805,18 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   view: {
-    margin: 10,
+    margin: 0,
     backgroundColor: '#fff',
-    padding: 10,
-    marginVertical: 10,
+    padding: 0,
+    marginVertical: 0,
     borderRadius: 20,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    flexWrap: 'wrap',
+    flexBasis: '50%',
   },
   productImg: {
     resizeMode: 'cover',
@@ -522,5 +837,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginTop: 9,
     marginLeft: 9,
+  },
+  quesBox: {
+    backgroundColor: '#CCD1E4',
+    width: 300,
+    height: 195,
+    margin: 5,
+    padding: 5,
+    marginLeft: 14,
+    alignContent: 'center',
   },
 });
