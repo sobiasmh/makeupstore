@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import { SearchBar, colors, Input } from 'react-native-elements';
 import React, { useState, useEffect } from 'react';
@@ -101,7 +101,7 @@ export default function App() {
       </Tab.Navigator>
     );
   };
-  const Categories = ({navigation}) => {
+  const Categories = ({ navigation }) => {
     return (
       <View
         style={{
@@ -111,7 +111,6 @@ export default function App() {
           backgroundColor: 'white',
         }}>
         <ScrollView>
-
           <TouchableOpacity
             style={{
               backgroundColor: '#8267BE',
@@ -123,8 +122,7 @@ export default function App() {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}
-            onPress={() => navigation.navigate('Products')}
-            >
+            onPress={() => navigation.navigate('Products')}>
             <View>
               <Text style={styles.text}>Face</Text>
             </View>
@@ -153,8 +151,7 @@ export default function App() {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}
-            onPress={() => navigation.navigate('Products')}
-            >
+            onPress={() => navigation.navigate('Products')}>
             <View>
               <Text style={styles.text}>Lips</Text>
             </View>
@@ -181,8 +178,7 @@ export default function App() {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}
-            onPress={() => navigation.navigate('Products')}
-            >
+            onPress={() => navigation.navigate('Products')}>
             <View>
               <Text style={styles.text}>Eyes</Text>
             </View>
@@ -209,8 +205,7 @@ export default function App() {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}
-            onPress={() => navigation.navigate('Products')}
-            >
+            onPress={() => navigation.navigate('Products')}>
             <View>
               <Text style={styles.text}>Skin</Text>
             </View>
@@ -232,7 +227,7 @@ export default function App() {
     );
   };
 
-  const Products = ({ navigation  }) => {
+  const Products = ({ navigation }) => {
     const [search, setSearch] = useState('');
     const [array, setarray] = useState([]);
     const [getcondition, setcondition] = React.useState(true);
@@ -272,26 +267,25 @@ export default function App() {
     const updateSearch = (search) => {
       setSearch(search);
     };
-     if (getcondition) {
-    return (
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
+    if (getcondition) {
+      return (
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" />
 
-        <Text>Waiting for response</Text>
-      </View>
-    );
-  }
+          <Text>Waiting for response</Text>
+        </View>
+      );
+    }
     return (
       <View
         style={{
           flex: 1,
           justifyContent: 'center',
           alignItems: 'flex-start',
-          width:"100%",
-          padding:4,
-          margin:4,
+          width: '100%',
+          padding: 4,
+          margin: 4,
           backgroundColor: '#fffafd',
-
         }}>
         <Text></Text>
         <View style={{ flex: 1 }}>
@@ -308,58 +302,57 @@ export default function App() {
             <View style={{ padding: 8, margin: 8 }}>
               <Text style={styles.text2}>All Makeup Products</Text>
             </View>
-            
-<FlatList
-          data={array}
-          numColumns={2}
-          renderItem={({ item }) => {
-            return (
-              
-            <View style={styles.row}>
-            
-              <View style={styles.carts}>
-                <Image
-                  style={styles.productImg}
-                  source={{
-                    uri: item.uri,
-                  }}
-                />
-                <View>
-                  <Text style={styles.prdtext1}>{item.Name}</Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.prdtext2}>Rs {item.Price}</Text>
 
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: '#EC255A',
-                      width: 30,
-                      height: 30,
-                      borderRadius: 50,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginTop: 7,
-                    }}
-                    onPress={() => navigation.navigate('Item', {
-                      product: item
-                    })
-                    }>
-                    <Text
-                      style={{
-                        color: 'white',
-                        fontSize: 18,
-                        fontWeight: 'bold',
-                      }}>
-                      +
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-    )
-          }}
-           keyExtractor={(item, index) => index.toString()}
-    />
+            <FlatList
+              data={array}
+              numColumns={2}
+              renderItem={({ item }) => {
+                return (
+                  <View style={styles.row}>
+                    <View style={styles.carts}>
+                      <Image
+                        style={styles.productImg}
+                        source={{
+                          uri: item.uri,
+                        }}
+                      />
+                      <View>
+                        <Text style={styles.prdtext1}>{item.Name}</Text>
+                      </View>
+                      <View style={styles.row}>
+                        <Text style={styles.prdtext2}>Rs {item.Price}</Text>
+
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: '#EC255A',
+                            width: 30,
+                            height: 30,
+                            borderRadius: 50,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 7,
+                          }}
+                          onPress={() =>
+                            navigation.navigate('Item', {
+                              product: item,
+                            })
+                          }>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                            }}>
+                            +
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                );
+              }}
+              keyExtractor={(item, index) => index.toString()}
+            />
           </View>
         </View>
       </View>
@@ -367,9 +360,11 @@ export default function App() {
   };
   const ShowProduct = ({ navigation, route }) => {
     const [getNumber, setNumber] = useState(1);
-    const {product} = route.params;
-    const [getCart, setCart] = useState([{'Name':null,"Price":null,"Quantity":null}])
-    
+    const { product } = route.params;
+    const [getCart, setCart] = useState([
+      { Name: null, Price: null, Quantity: null },
+    ]);
+
     return (
       <View
         style={{
@@ -491,11 +486,11 @@ export default function App() {
                 marginTop: 7,
               }}
               onPress={() => {
-                var obj={};
+                var obj = {};
                 obj['Name'] = product.Name;
                 obj['Price'] = product.Price;
                 obj['Quantity'] = getNumber;
-                setCart([...getCart, obj])
+                setCart([...getCart, obj]);
               }}>
               <Text
                 style={{
@@ -517,10 +512,11 @@ export default function App() {
                 alignItems: 'center',
                 marginTop: 7,
               }}
-              onPress={() => navigation.navigate('Order', {
-                prd:getCart
-              }
-                )}>
+              onPress={() =>
+                navigation.navigate('Order', {
+                  prd: getCart,
+                })
+              }>
               <Text
                 style={{
                   color: 'white',
@@ -628,7 +624,7 @@ export default function App() {
                     margin: 5,
                     fontSize: 17,
                     borderWidth: 1,
-                    borderColor:"white"
+                    borderColor: 'white',
                   }}>
                   {item}
                 </Text>
@@ -651,9 +647,9 @@ export default function App() {
     );
   };
 
-  const Order = ({navigation, route}) => {
-    const {prd} = route.params;
-    
+  const Order = ({ navigation, route }) => {
+    const { prd } = route.params;
+
     return (
       <View
         style={{
@@ -662,40 +658,33 @@ export default function App() {
           justifyContent: 'center',
           backgroundColor: '#fffafd',
         }}>
-          <View style={{ flex: 1 }}>
-            <View >
+        <View style={{ flex: 1 }}>
+          <View>
             <FlatList
-        style={{ paddingTop: 20, width: '100%' }}
-        data={prd}
-        renderItem={({ item }) => (
-          <View
-            
-            style={{
-              backgroundColor: '#064635',
-              margin: 5,
-              padding: 5,
-              borderRadius: 10,
-              width: '95%',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-
-            }}
-            
-            
-          >
-            <Text style={{ fontSize: 15, color: 'white' }}> {item.Name} {"\n"} {item.Price} {"\n"} {item.Quantity}</Text>
-            
-            
-
-            
+              style={{ paddingTop: 20, width: '100%' }}
+              data={prd}
+              renderItem={({ item }) => (
+                <View
+                  style={{
+                    backgroundColor: '#F0D290',
+                    margin: 5,
+                    padding: 5,
+                    borderRadius: 10,
+                    width: 300,
+                    height: 90,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
+                    {' '}
+                    {item.Name} {'\n'} {item.Price} {'\n'} {item.Quantity}
+                  </Text>
+                </View>
+              )}
+            />
           </View>
-        )}
-        />
-            </View>
-            
-          </View>
-
         </View>
+      </View>
     );
   };
 
