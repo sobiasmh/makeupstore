@@ -6,14 +6,19 @@ import {
   ScrollView,
   Image,
   SafeAreaView,
+  TextInput,
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  Pressable,
+  Modal,
 } from 'react-native';
 import { SearchBar, colors, Input } from 'react-native-elements';
+import uuid from 'react-native-uuid';
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -122,7 +127,7 @@ export default function App() {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}
-            onPress={() => navigation.navigate('Products')}>
+            onPress={() => navigation.navigate('Products', { n: 'Face' })}>
             <View>
               <Text style={styles.text}>Face</Text>
             </View>
@@ -136,7 +141,7 @@ export default function App() {
                   marginTop: 9,
                 }}
                 source={{
-                  uri: 'https://cdn-icons.flaticon.com/png/512/1807/premium/1807363.png?token=exp=1640937351~hmac=269efc31d168740eb0c8955603e31eac',
+                  uri: 'https://cdn-icons.flaticon.com/png/512/1807/premium/1807363.png?token=exp=1641057458~hmac=9cbb5c325245f895f25cd12615e6e367',
                 }}
               />
             </View>
@@ -151,7 +156,7 @@ export default function App() {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}
-            onPress={() => navigation.navigate('Products')}>
+            onPress={() => navigation.navigate('Products', { n: 'Lips' })}>
             <View>
               <Text style={styles.text}>Lips</Text>
             </View>
@@ -164,7 +169,7 @@ export default function App() {
                 marginTop: 9,
               }}
               source={{
-                uri: 'https://cdn-icons.flaticon.com/png/512/2975/premium/2975771.png?token=exp=1640937351~hmac=3a453a4a3948c2c26b3df157da058824',
+                uri: 'https://cdn-icons.flaticon.com/png/512/2975/premium/2975771.png?token=exp=1641057348~hmac=b2e2308f31ef253b4e3c1a57c6c2bea9',
               }}
             />
           </TouchableOpacity>
@@ -178,7 +183,7 @@ export default function App() {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}
-            onPress={() => navigation.navigate('Products')}>
+            onPress={() => navigation.navigate('Products', { n: 'Eyes' })}>
             <View>
               <Text style={styles.text}>Eyes</Text>
             </View>
@@ -205,7 +210,7 @@ export default function App() {
               flexDirection: 'row',
               justifyContent: 'space-evenly',
             }}
-            onPress={() => navigation.navigate('Products')}>
+            onPress={() => navigation.navigate('Products', { n: 'Skin' })}>
             <View>
               <Text style={styles.text}>Skin</Text>
             </View>
@@ -218,7 +223,7 @@ export default function App() {
                 marginTop: 9,
               }}
               source={{
-                uri: 'https://cdn-icons.flaticon.com/png/512/1807/premium/1807383.png?token=exp=1640937351~hmac=a23cdb3a09056b459bf8ac9075b4bce5',
+                uri: 'https://cdn-icons.flaticon.com/png/512/1807/premium/1807383.png?token=exp=1641057467~hmac=29df26c50af52828dced4e39bee35d08',
               }}
             />
           </TouchableOpacity>
@@ -227,10 +232,16 @@ export default function App() {
     );
   };
 
-  const Products = ({ navigation }) => {
+  const Products = ({ navigation, route }) => {
     const [search, setSearch] = useState('');
     const [array, setarray] = useState([]);
+    const [filtered, setFilterted] = useState('');
+    const [f, setf] = useState('');
+
+    const { n } = route.params!=undefined? route.params:{};
     const [getcondition, setcondition] = React.useState(true);
+    
+    
     const getproduct = () => {
       fetch(
         `https://barebeauty-bc3ab-default-rtdb.firebaseio.com/Products.json`,
@@ -243,16 +254,12 @@ export default function App() {
           let samplearray = [];
           for (key in responsejson) {
             if (array.length == 0) {
-              console.log('First add');
               samplearray.push(responsejson[key]);
             } else {
-              console.log('other addition');
               samplearray.push(responsejson[key]);
             }
           }
           setarray(samplearray);
-
-          console.log(array);
 
           setcondition(false);
         })
@@ -264,8 +271,14 @@ export default function App() {
     React.useEffect(() => {
       getproduct();
     }, []);
+
     const updateSearch = (search) => {
+      const d = array.filter((item) => {
+        return item.Name.match(search);
+      });
+
       setSearch(search);
+      setFilterted(d);
     };
     if (getcondition) {
       return (
@@ -304,7 +317,15 @@ export default function App() {
             </View>
 
             <FlatList
-              data={array}
+              style={{ marginBottom: 80, width: '100%' }}
+              data={
+                filtered.length > 0
+                  ? filtered
+                  : array &&
+                   array
+                  ? array.filter((item) => item.Category.match(n))
+                  : null
+              }
               numColumns={2}
               renderItem={({ item }) => {
                 return (
@@ -332,11 +353,11 @@ export default function App() {
                             alignItems: 'center',
                             marginTop: 7,
                           }}
-                          onPress={() =>
+                          onPress={() => {
                             navigation.navigate('Item', {
                               product: item,
-                            })
-                          }>
+                            });
+                          }}>
                           <Text
                             style={{
                               color: 'white',
@@ -362,7 +383,7 @@ export default function App() {
     const [getNumber, setNumber] = useState(1);
     const { product } = route.params;
     const [getCart, setCart] = useState([
-      { Name: null, Price: null, Quantity: null },
+      { Name: null, Price: null, Quantity: null, key: Math.random() },
     ]);
 
     return (
@@ -480,6 +501,7 @@ export default function App() {
                 backgroundColor: '#EC255A',
                 width: 120,
                 height: 30,
+                margin: 3,
                 borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -490,6 +512,7 @@ export default function App() {
                 obj['Name'] = product.Name;
                 obj['Price'] = product.Price;
                 obj['Quantity'] = getNumber;
+                obj['key'] = Math.random();
                 setCart([...getCart, obj]);
               }}>
               <Text
@@ -539,7 +562,9 @@ export default function App() {
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: '#fffafd',
-        }}></View>
+        }}>
+        <Text>My video project!</Text>
+      </View>
     );
   };
   const Community = () => {
@@ -649,7 +674,40 @@ export default function App() {
 
   const Order = ({ navigation, route }) => {
     const { prd } = route.params;
+    const [getName, setName] = useState('');
+    const [getAddress, setAddress] = useState('');
+    const [getmodalvisible, setModalVisible] = React.useState(false);
 
+    const sentData = () => {
+      let ID = uuid.v4().toString();
+
+      for (var i in prd) {
+        var reqOptions = {
+          method: 'PUT',
+
+          body: JSON.stringify({
+            ID: ID,
+            PName: prd[i].Name,
+            PQuantity: prd[i].Quantity,
+            PPrice: prd[i].Price,
+            UName: getName,
+            UAddress: getAddress,
+          }),
+        };
+      }
+      fetch(
+        `https://barebeauty-bc3ab-default-rtdb.firebaseio.com/Orders/${ID}.json`,
+        reqOptions
+      )
+        .then((res) => console.log(res))
+        .then((result) => console.log('Add Response:', result))
+        .catch((error) => console.log('error', error));
+    };
+    const deleteItem = (key) => {
+      navigation.setParams({
+        prd: prd.filter((i) => i.key != key),
+      });
+    };
     return (
       <View
         style={{
@@ -658,31 +716,120 @@ export default function App() {
           justifyContent: 'center',
           backgroundColor: '#fffafd',
         }}>
-        <View style={{ flex: 1 }}>
-          <View>
-            <FlatList
-              style={{ paddingTop: 20, width: '100%' }}
-              data={prd}
-              renderItem={({ item }) => (
-                <View
+        <Modal animationType="fade" visible={getmodalvisible}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={{ textAlign: 'center' }}>
+                Thanks for Placing Order
+              </Text>
+              <View>
+                <Pressable
                   style={{
-                    backgroundColor: '#F0D290',
-                    margin: 5,
-                    padding: 5,
+                    backgroundColor: '#EC255A',
+                    width: 120,
+                    height: 30,
                     borderRadius: 10,
-                    width: 300,
-                    height: 90,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: 7,
+                  }}
+                  onPress={() => {
+                    setModalVisible(false);
+                    navigation.navigate('Products');
                   }}>
-                  <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
-                    {' '}
-                    {item.Name} {'\n'} {item.Price} {'\n'} {item.Quantity}
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 13,
+                      fontWeight: 'bold',
+                    }}>
+                    Go Back home
                   </Text>
-                </View>
-              )}
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
+        <View style={{ flex: 1, width: '95%' }}>
+          <FlatList
+            style={{ paddingTop: 20, marginBottom: 2, width: '100%' }}
+            data={prd}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                key={item.key}
+                style={{
+                  backgroundColor: '#F0D290',
+                  margin: 5,
+                  padding: 5,
+                  borderRadius: 10,
+                  width: 300,
+                  height: 90,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={{ fontSize: 17, fontWeight: 'bold' }}>
+                  {item.Name} {'\n'} {item.Price} {'\n'} {item.Quantity}
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: 'white',
+                    width: 30,
+                    height: 30,
+                    borderRadius: 50,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => {
+                    deleteItem(item.key);
+                  }}>
+                  <Text style={{ color: 'red', fontSize: 10 }}>X</Text>
+                </TouchableOpacity>
+              </TouchableOpacity>
+            )}
+          />
+
+          <View>
+            <Text style={styles.txt}>Name</Text>
+            <Input
+              placeholder="Enter Name"
+              onChangeText={setName}
+              leftIcon={<Icon name="user" size={24} color="grey" />}
             />
           </View>
+
+          <View>
+            <Text style={styles.txt}>Address</Text>
+            <Input
+              placeholder="Enter Address"
+              onChangeText={setAddress}
+              leftIcon={<Icon name="home" size={24} color="grey" />}
+            />
+          </View>
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#EC255A',
+              width: 120,
+              height: 30,
+              borderRadius: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 7,
+              marginBottom: 15,
+            }}
+            onPress={() => {
+              sentData();
+              setModalVisible(true);
+            }}>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 15,
+                fontWeight: 'bold',
+              }}>
+              ORDER
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -835,5 +982,26 @@ const styles = StyleSheet.create({
     padding: 5,
     marginLeft: 14,
     alignContent: 'center',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FEECE9',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
